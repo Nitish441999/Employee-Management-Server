@@ -71,76 +71,75 @@ const getEmployee = async (req, resp) => {
 };
 
 const updateEmployeeController = async (req, resp) => {
-    try {
-      // Extract ID from URL parameters
-      const { id } = req.params;
-  
-      // Find employee by ID
-      const employee = await AddEmployeeModel.findById(id);
-  
-      // Validate if employee exists
-      if (!employee) {
-        return resp.status(404).send({
-          success: false,
-          message: "Employee Not Found",
-        });
-      }
-  
-      // Destructure fields from request body
-      const {
-        name,
-        imageURL,
-        email,
-        mobile,
-        aadhar,
-        panCard,
-        jobRole,
-        lastname,
-        salary,
-      } = req.body;
-  
-      // Update fields if provided
-      if (name) employee.name = name;
-      if (imageURL) employee.imageURL = imageURL;
-      if (email) employee.email = email;
-      if (mobile) employee.mobile = mobile;
-      if (aadhar) employee.aadhar = aadhar;
-      if (panCard) employee.panCard = panCard;
-      if (jobRole) employee.jobRole = jobRole;
-      if (lastname) employee.lastname = lastname;
-      if (salary) employee.salary = salary;
-  
-      // Save updated employee
-      await employee.save();
-  
-      // Send success response
-      resp.status(200).send({
-        success: true,
-        message: "Employee Updated Successfully",
-        employee,
-      });
-    } catch (error) {
-      console.error(error);
-      resp.status(500).send({
+  try {
+    // Extract ID from URL parameters
+    const { id } = req.params;
+
+    // Find employee by ID
+    const employee = await AddEmployeeModel.findById(id);
+
+    // Validate if employee exists
+    if (!employee) {
+      return resp.status(404).send({
         success: false,
-        message: "Error in Update API",
-        error: error.message || error,
+        message: "Employee Not Found",
       });
     }
-  };
-  
+
+    // Destructure fields from request body
+    const {
+      name,
+      imageURL,
+      email,
+      mobile,
+      aadhar,
+      panCard,
+      jobRole,
+      lastname,
+      salary,
+    } = req.body;
+
+    // Update fields if provided
+    if (name) employee.name = name;
+    if (imageURL) employee.imageURL = imageURL;
+    if (email) employee.email = email;
+    if (mobile) employee.mobile = mobile;
+    if (aadhar) employee.aadhar = aadhar;
+    if (panCard) employee.panCard = panCard;
+    if (jobRole) employee.jobRole = jobRole;
+    if (lastname) employee.lastname = lastname;
+    if (salary) employee.salary = salary;
+
+    // Save updated employee
+    await employee.save();
+
+    // Send success response
+    resp.status(200).json({
+      success: true,
+      message: "Employee Updated Successfully",
+      employee,
+    });
+  } catch (error) {
+    console.error(error);
+    resp.status(500).json({
+      success: false,
+      message: "Error in Update API",
+      error: error.message || error,
+    });
+  }
+};
 
 // Delete Employee
 const deleteEmployeeController = async (req, resp) => {
   try {
     const employee = await AddEmployeeModel.findByIdAndDelete(req.params.id);
-    resp.status(201).send({
+    resp.status(201).json({
       success: true,
       massage: "Your Account Has Been Deleted Successfully",
     });
   } catch (error) {
     console.log(error);
-    resp.status(500).send({
+    resp.status(500).json({
       success: false,
       massage: "Error in Delete Employee API",
       error: error.massage || error,

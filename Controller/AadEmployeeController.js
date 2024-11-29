@@ -28,7 +28,7 @@ const addEmployeeController = async (req, resp) => {
       !salary ||
       !mobile
     ) {
-      return resp.status(400).send({
+      return resp.status(400).json({
         success: false,
         message: "Please provide all required fields.",
       });
@@ -37,7 +37,7 @@ const addEmployeeController = async (req, resp) => {
     // Check if the employee already exists
     const existingEmployee = await AddEmployeeModel.findOne({ email });
     if (existingEmployee) {
-      return resp.status(400).send({
+      return resp.status(400).json({
         success: false,
         message: "Email already exists. Please login.",
       });
@@ -60,7 +60,7 @@ const addEmployeeController = async (req, resp) => {
       salary,
     });
 
-    resp.status(201).send({
+    resp.status(201).json({
       success: true,
       message: "Employee added successfully.",
       employee,
@@ -83,7 +83,7 @@ const loginController = async (req, resp) => {
 
     //validation
     if (!email || !password) {
-      return resp.status(400).send({
+      return resp.status(400).json({
         success: false,
         massage: "please Provied all fields",
       });
@@ -91,7 +91,7 @@ const loginController = async (req, resp) => {
     // check user
     const employee = await AddEmployeeModel.findOne({ email });
     if (!employee) {
-      return resp.status(404).send({
+      return resp.status(404).json({
         success: false,
         massage: "Employee is Not Found",
       });
@@ -100,7 +100,7 @@ const loginController = async (req, resp) => {
     // compaire Password
     const isMatch = await bcrypt.compare(password, employee.password);
     if (!isMatch) {
-      return resp.status(404).send({
+      return resp.status(404).json({
         success: false,
         massage: "Invalid Password",
       });
@@ -114,7 +114,7 @@ const loginController = async (req, resp) => {
         expiresIn: "7d",
       }
     );
-    resp.status(200).send({
+    resp.status(200).json({
       success: true,
       massage: "Login Successfuly",
       token,
@@ -122,7 +122,7 @@ const loginController = async (req, resp) => {
     });
   } catch (error) {
     console.error("Error in login API: ", error);
-    resp.status(500).send({
+    resp.status(500).json({
       success: false,
       massage: "Error In Login API",
       error: error.message || error,
@@ -132,7 +132,7 @@ const loginController = async (req, resp) => {
 
 //verify
 const verify = async (req, resp) => {
-  return resp.status(200).send({
+  return resp.status(200).json({
     success: true,
     employe: req.employee,
   });
